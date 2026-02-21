@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PacketScope — Network Packet Analyzer</title>
+    <meta name="description"
+        content="Real-time network packet analyzer powered by Wireshark/tshark. Capture live traffic or upload .pcap files for deep inspection." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+    <!-- ══════════════════════════════════════════ HEADER ══════════════════════════════════════════ -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 12C2 12 5 5 12 5C19 5 22 12 22 12C22 12 19 19 12 19C5 19 2 12 2 12Z"
+                        stroke="currentColor" stroke-width="1.5" />
+                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M12 2V5M12 19V22M2 12H5M19 12H22" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" />
+                </svg>
+                <span class="logo-text">Packet<span class="logo-accent">Scope</span></span>
+            </div>
+            <div class="subtitle">Powered by Wireshark / tshark</div>
+        </div>
+        <div class="header-right">
+            <div class="status-indicator" id="statusIndicator">
+                <span class="status-dot" id="statusDot"></span>
+                <span class="status-text" id="statusText">Idle</span>
+            </div>
+            <div class="tshark-badge" id="tsharkBadge" title="Checking tshark…">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" />
+                </svg>
+                <span>tshark</span>
+            </div>
+            <div class="packet-counter">
+                <span id="totalCount">0</span> packets
+            </div>
+        </div>
+    </header>
+
+    <!-- ══════════════════════════════════════════ MAIN LAYOUT ══════════════════════════════════════════ -->
+    <main class="main">
+
+        <!-- LEFT SIDEBAR: Controls -->
+        <aside class="sidebar">
+            <!-- Control Panel -->
+            <section class="card" id="controlPanel">
+                <h2 class="card-title">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                            <path
+                                d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                        Live Capture
+                    </div>
+                    <span class="live-indicator">LIVE</span>
+                </h2>
+                <label class="field-label" for="ifaceSelect">Network Interface</label>
+                <div class="select-wrap">
+                    <select id="ifaceSelect" class="input-field">
+                        <option value="">Loading interfaces…</option>
+                    </select>
+                </div>
+                <div class="btn-row">
+                    <button id="btnStart" class="btn btn-start" onclick="startCapture()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5,3 19,12 5,21" />
+                        </svg>
+                        Start
+                    </button>
+                    <button id="btnStop" class="btn btn-stop" disabled onclick="stopCapture()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                        </svg>
+                        Stop
+                    </button>
+                    <button class="btn btn-ghost" onclick="clearPackets()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        Clear
+                    </button>
+                </div>
+            </section>
+
+            <!-- Upload Panel -->
+            <section class="card">
+                <h2 class="card-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" />
+                        <polyline points="17 8 12 3 7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" />
+                    </svg>
+                    Upload PCAP
+                </h2>
+                <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor"
+                            stroke-width="1.5" />
+                        <polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="1.5" />
+                    </svg>
+                    <p>Drop .pcap / .pcapng here<br><small>or click to browse</small></p>
+                    <input type="file" id="fileInput" accept=".pcap,.pcapng" onchange="uploadFile(this.files[0])"
+                        hidden />
+                </div>
+                <div class="upload-progress" id="uploadProgress" hidden>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span id="uploadStatus">Parsing…</span>
+                </div>
+            </section>
+
+            <!-- Statistics -->
+            <section class="card">
+                <h2 class="card-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" />
+                    </svg>
+                    Protocol Stats
+                </h2>
+                <div class="chart-wrap">
+                    <canvas id="protoChart"></canvas>
+                </div>
+                <div class="stats-list" id="statsList"></div>
+            </section>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="content">
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <svg class="filter-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M22 3H2l8 9.46V19l4 2v-9.54z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                <input id="filterInput" class="filter-input" type="text"
+                    placeholder="Filter packets… e.g. TCP, 192.168.1.1, dns, http" oninput="applyFilter()" />
+                <select id="filterProto" class="filter-proto" onchange="applyFilter()">
+                    <option value="">All Protocols</option>
+                    <option>TCP</option>
+                    <option>UDP</option>
+                    <option>HTTP</option>
+                    <option>DNS</option>
+                    <option>TLS</option>
+                    <option>ICMP</option>
+                    <option>ARP</option>
+                    <option>IPv6</option>
+                </select>
+                <button class="btn btn-ghost btn-sm" onclick="clearFilter()">✕ Clear</button>
+                <span class="filter-count" id="filterCount"></span>
+            </div>
+
+            <!-- Packet Table -->
+            <div class="table-container" id="tableContainer">
+                <table class="packet-table" id="packetTable">
+                    <thead>
+                        <tr>
+                            <th class="col-no">No.</th>
+                            <th class="col-time">Time (s)</th>
+                            <th class="col-src">Source</th>
+                            <th class="col-dst">Destination</th>
+                            <th class="col-proto">Protocol</th>
+                            <th class="col-len">Length</th>
+                            <th class="col-info">Info</th>
+                        </tr>
+                    </thead>
+                    <tbody id="packetBody"></tbody>
+                </table>
+                <div class="empty-state" id="emptyState">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" opacity="0.3">
+                        <path
+                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                            fill="currentColor" />
+                    </svg>
+                    <p>No packets yet</p>
+                    <small>Start a live capture or upload a .pcap file</small>
+                </div>
+            </div>
+
+            <!-- Packet Detail Inspector -->
+            <div class="detail-panel" id="detailPanel" hidden>
+                <div class="detail-header">
+                    <h3 class="detail-title" id="detailTitle">Packet Details</h3>
+                    <button class="btn btn-ghost btn-sm" onclick="closeDetail()">✕ Close</button>
+                </div>
+                <div class="detail-body" id="detailBody"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>

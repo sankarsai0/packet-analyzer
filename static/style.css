@@ -1,0 +1,1127 @@
+/* ══════════════════════════════════════════════════════════════
+   PacketScope — style.css
+   Deep-Space Cyberpunk UI  ·  v3
+══════════════════════════════════════════════════════════════ */
+
+/* ── Variables ── */
+:root {
+    /* Backgrounds — deep indigo / near-black */
+    --bg: #06070f;
+    --bg-1: #0a0d1a;
+    --bg-2: #0e1225;
+    --bg-3: #151c35;
+    --bg-4: #1c2540;
+
+    /* Borders */
+    --border: rgba(120, 100, 255, 0.10);
+    --border-glow: rgba(100, 220, 255, 0.28);
+
+    /* Text */
+    --text: #e8eaf6;
+    --text-2: #9fa8c7;
+    --text-3: #4d5880;
+
+    /* Primary accent — electric cyan */
+    --accent: #00d4ff;
+    --accent-dim: rgba(0, 212, 255, 0.12);
+    --accent-glow: rgba(0, 212, 255, 0.20);
+
+    /* Secondary — violet */
+    --violet: #a78bfa;
+    --violet-dim: rgba(167, 139, 250, 0.12);
+
+    /* Semantic */
+    --green: #23d18b;
+    --red: #ff4d6d;
+    --yellow: #ffd166;
+    --orange: #ff8c42;
+    --purple: #c084fc;
+    --cyan: #06b6d4;
+    --pink: #f472b6;
+    --teal: #2dd4bf;
+
+    /* Typography */
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --font-ui: 'Inter', system-ui, sans-serif;
+
+    /* Geometry */
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-xs: 5px;
+
+    /* Shadows */
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    --shadow-glow: 0 0 32px rgba(0, 212, 255, 0.10);
+
+    /* Layout */
+    --header-h: 64px;
+    --sidebar-w: 300px;
+    --row-h: 36px;
+}
+
+/* ── Reset ── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    /* Subtle starfield-like noise overlay */
+    background-image: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(100, 80, 255, 0.12) 0%, transparent 70%);
+}
+
+/* ══ HEADER ══════════════════════════════════════ */
+.header {
+    height: var(--header-h);
+    background: rgba(10, 13, 26, 0.92);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-shrink: 0;
+    /* Top edge glow line */
+    box-shadow: 0 1px 0 rgba(0, 212, 255, 0.06), 0 4px 32px rgba(0, 0, 0, 0.5);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.3px;
+}
+
+.logo-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--accent);
+    filter: drop-shadow(0 0 10px var(--accent));
+}
+
+.logo-accent {
+    background: linear-gradient(135deg, var(--accent), var(--violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    color: var(--text-3);
+    font-size: 11px;
+    letter-spacing: 0.3px;
+}
+
+/* ── Status Indicator ── */
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(21, 28, 53, 0.8);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+    backdrop-filter: blur(8px);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-3);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.status-dot.running {
+    background: var(--green);
+    box-shadow: 0 0 10px var(--green), 0 0 20px rgba(35, 209, 139, 0.3);
+    animation: pulse 1.5s infinite;
+}
+
+.status-dot.error {
+    background: var(--red);
+    box-shadow: 0 0 10px var(--red);
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.55;
+        transform: scale(0.8);
+    }
+}
+
+/* ── Tshark Badge ── */
+.tshark-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(35, 209, 139, 0.08);
+    border: 1px solid rgba(35, 209, 139, 0.22);
+    color: var(--green);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    transition: all 0.3s;
+}
+
+.tshark-badge.error {
+    background: rgba(255, 77, 109, 0.08);
+    border-color: rgba(255, 77, 109, 0.25);
+    color: var(--red);
+}
+
+/* ── Packet Counter ── */
+.packet-counter {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--accent), var(--violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    min-width: 80px;
+    text-align: right;
+}
+
+/* ══ MAIN ══════════════════════════════════════ */
+.main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* ══ SIDEBAR ══════════════════════════════════════ */
+.sidebar {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    background: var(--bg-1);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 10px;
+    /* Ambient left glow */
+    box-shadow: inset -1px 0 0 rgba(100, 80, 255, 0.06);
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 3px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--bg-4);
+    border-radius: 4px;
+}
+
+/* ── Cards ── */
+.card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(100, 80, 255, 0.03) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.card:hover {
+    border-color: var(--border-glow);
+    box-shadow: 0 0 0 1px rgba(0, 212, 255, 0.06), var(--shadow-glow);
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-3);
+    margin-bottom: 2px;
+}
+
+/* ── Live Capture Card ── */
+#controlPanel {
+    border-left: 2px solid var(--accent);
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.04) 0%, var(--bg-2) 50%);
+}
+
+#controlPanel.capturing {
+    border-left-color: var(--green);
+    box-shadow: 0 0 24px rgba(35, 209, 139, 0.10), 0 0 0 1px rgba(35, 209, 139, 0.08);
+}
+
+#controlPanel.capturing::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(35, 209, 139, 0.06), transparent);
+    animation: scanline 3s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes scanline {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+.live-indicator {
+    display: none;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px;
+    background: rgba(255, 77, 109, 0.12);
+    color: var(--red);
+    border: 1px solid rgba(255, 77, 109, 0.25);
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+}
+
+.capturing .live-indicator {
+    display: flex;
+    animation: livePulse 2s infinite;
+}
+
+@keyframes livePulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.65;
+        transform: scale(0.95);
+    }
+}
+
+.field-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+/* ── Inputs ── */
+.select-wrap {
+    position: relative;
+}
+
+.select-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-3);
+    pointer-events: none;
+    font-size: 10px;
+}
+
+.input-field {
+    width: 100%;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    appearance: none;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-field:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* ── Buttons ── */
+.btn-row {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-row .btn {
+    flex: 1;
+    justify-content: center;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:disabled {
+    opacity: 0.32;
+    cursor: not-allowed;
+}
+
+/* Start — vivid emerald */
+.btn-start {
+    background: linear-gradient(135deg, #23d18b 0%, #0ea472 100%);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(35, 209, 139, 0.28);
+}
+
+.btn-start:hover:not(:disabled) {
+    background: linear-gradient(135deg, #34e09a 0%, #16b884 100%);
+    box-shadow: 0 4px 22px rgba(35, 209, 139, 0.48);
+    transform: translateY(-2px);
+}
+
+/* Stop — hot red */
+.btn-stop {
+    background: linear-gradient(135deg, #ff4d6d 0%, #cc2244 100%);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(255, 77, 109, 0.25);
+}
+
+.btn-stop:hover:not(:disabled) {
+    background: linear-gradient(135deg, #ff6080 0%, #e02255 100%);
+    box-shadow: 0 4px 22px rgba(255, 77, 109, 0.45);
+    transform: translateY(-2px);
+}
+
+/* Ghost */
+.btn-ghost {
+    background: var(--bg-3);
+    color: var(--text-2);
+    border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+    background: var(--bg-4);
+    color: var(--text);
+    border-color: rgba(0, 212, 255, 0.22);
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.06);
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 11px;
+}
+
+/* ── Drop Zone ── */
+.drop-zone {
+    border: 1.5px dashed rgba(120, 100, 255, 0.25);
+    border-radius: var(--radius-sm);
+    padding: 20px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: rgba(100, 80, 255, 0.03);
+}
+
+.drop-zone:hover,
+.drop-zone.drag-over {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+    color: var(--accent);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.08);
+}
+
+.drop-zone p {
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.drop-zone small {
+    font-size: 10px;
+}
+
+/* ── Upload Progress ── */
+.upload-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.progress-bar {
+    height: 3px;
+    background: var(--bg-4);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--violet), var(--accent));
+    background-size: 200% 100%;
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.3s ease;
+    animation: shimmer 1.8s linear infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% center;
+    }
+
+    100% {
+        background-position: -200% center;
+    }
+}
+
+#uploadStatus {
+    font-size: 11px;
+    color: var(--text-2);
+}
+
+/* ── Chart & Stats ── */
+.chart-wrap {
+    position: relative;
+    height: 155px;
+}
+
+.stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-height: 195px;
+    overflow-y: auto;
+}
+
+.stats-list::-webkit-scrollbar {
+    width: 3px;
+}
+
+.stats-list::-webkit-scrollbar-thumb {
+    background: var(--bg-4);
+    border-radius: 3px;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.stat-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.stat-name {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--text-2);
+    flex: 1;
+}
+
+.stat-bar-wrap {
+    flex: 2;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.stat-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.stat-count {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-3);
+    min-width: 30px;
+    text-align: right;
+}
+
+/* ══ CONTENT ══════════════════════════════════════ */
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ── Filter Bar ── */
+.filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--bg-1);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.filter-icon {
+    color: var(--text-3);
+    flex-shrink: 0;
+}
+
+.filter-input {
+    flex: 1;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    padding: 6px 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.filter-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.filter-input::placeholder {
+    color: var(--text-3);
+}
+
+.filter-proto {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.filter-proto:focus {
+    border-color: var(--accent);
+}
+
+.filter-count {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    white-space: nowrap;
+    min-width: 70px;
+    text-align: right;
+}
+
+/* ── Packet Table ── */
+.table-container {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+}
+
+.table-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: var(--bg-4);
+    border-radius: 4px;
+}
+
+.packet-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.packet-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg-2);
+}
+
+/* Subtle gradient separator under thead */
+.packet-table thead::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent) 30%, var(--violet) 70%, transparent);
+    opacity: 0.25;
+}
+
+.packet-table th {
+    padding: 9px 10px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-3);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+.packet-table th:hover {
+    color: var(--accent);
+}
+
+/* Column widths */
+.col-no {
+    width: 56px;
+}
+
+.col-time {
+    width: 88px;
+}
+
+.col-src {
+    width: 148px;
+}
+
+.col-dst {
+    width: 148px;
+}
+
+.col-proto {
+    width: 78px;
+}
+
+.col-len {
+    width: 64px;
+}
+
+/* ── Packet Rows ── */
+.packet-table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.025);
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+/* Hidden rows (filtered out) */
+.packet-table tbody tr.row-hidden {
+    display: none;
+}
+
+.packet-table tbody tr:hover {
+    background: rgba(0, 212, 255, 0.05);
+}
+
+.packet-table tbody tr.selected {
+    background: rgba(0, 212, 255, 0.10) !important;
+    box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.packet-table td {
+    padding: 6px 10px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: var(--row-h);
+}
+
+.td-no {
+    color: var(--text-3);
+}
+
+.td-time {
+    color: var(--text-3);
+    font-size: 11px;
+}
+
+.td-info {
+    font-size: 11px;
+    color: var(--text-3);
+}
+
+/* ── Protocol Badges ── */
+.proto-badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: var(--radius-xs);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Each protocol gets a vivid, distinct look */
+.proto-TCP {
+    background: rgba(0, 160, 255, 0.15);
+    color: #38beff;
+    border: 1px solid rgba(0, 160, 255, 0.22);
+}
+
+.proto-UDP {
+    background: rgba(35, 209, 139, 0.15);
+    color: #2ee89a;
+    border: 1px solid rgba(35, 209, 139, 0.22);
+}
+
+.proto-HTTP {
+    background: rgba(255, 140, 66, 0.15);
+    color: #ff9f57;
+    border: 1px solid rgba(255, 140, 66, 0.22);
+}
+
+.proto-HTTP2 {
+    background: rgba(255, 140, 66, 0.15);
+    color: #ff9f57;
+    border: 1px solid rgba(255, 140, 66, 0.22);
+}
+
+.proto-HTTPS {
+    background: rgba(255, 140, 66, 0.15);
+    color: #ff9f57;
+    border: 1px solid rgba(255, 140, 66, 0.22);
+}
+
+.proto-DNS {
+    background: rgba(255, 209, 102, 0.15);
+    color: #ffd166;
+    border: 1px solid rgba(255, 209, 102, 0.22);
+}
+
+.proto-TLS {
+    background: rgba(167, 139, 250, 0.15);
+    color: #a78bfa;
+    border: 1px solid rgba(167, 139, 250, 0.22);
+}
+
+.proto-SSL {
+    background: rgba(167, 139, 250, 0.15);
+    color: #a78bfa;
+    border: 1px solid rgba(167, 139, 250, 0.22);
+}
+
+.proto-ICMP {
+    background: rgba(255, 77, 109, 0.15);
+    color: #ff4d6d;
+    border: 1px solid rgba(255, 77, 109, 0.22);
+}
+
+.proto-ICMPV6 {
+    background: rgba(255, 77, 109, 0.15);
+    color: #ff4d6d;
+    border: 1px solid rgba(255, 77, 109, 0.22);
+}
+
+.proto-ARP {
+    background: rgba(192, 132, 252, 0.15);
+    color: #c084fc;
+    border: 1px solid rgba(192, 132, 252, 0.22);
+}
+
+.proto-IPV6 {
+    background: rgba(45, 212, 191, 0.15);
+    color: #2dd4bf;
+    border: 1px solid rgba(45, 212, 191, 0.22);
+}
+
+.proto-DHCP {
+    background: rgba(244, 114, 182, 0.15);
+    color: #f472b6;
+    border: 1px solid rgba(244, 114, 182, 0.22);
+}
+
+.proto-BOOTP {
+    background: rgba(244, 114, 182, 0.15);
+    color: #f472b6;
+    border: 1px solid rgba(244, 114, 182, 0.22);
+}
+
+.proto-default {
+    background: rgba(79, 88, 128, 0.15);
+    color: #7480a8;
+    border: 1px solid rgba(79, 88, 128, 0.18);
+}
+
+/* ── Row protocol tinting (very subtle) ── */
+tr.row-TCP td {
+    background: rgba(0, 160, 255, 0.025);
+}
+
+tr.row-UDP td {
+    background: rgba(35, 209, 139, 0.025);
+}
+
+tr.row-HTTP td {
+    background: rgba(255, 140, 66, 0.025);
+}
+
+tr.row-DNS td {
+    background: rgba(255, 209, 102, 0.025);
+}
+
+tr.row-TLS td {
+    background: rgba(167, 139, 250, 0.025);
+}
+
+tr.row-ICMP td {
+    background: rgba(255, 77, 109, 0.025);
+}
+
+tr.row-ARP td {
+    background: rgba(192, 132, 252, 0.025);
+}
+
+/* ── Empty State ── */
+.empty-state {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: var(--text-3);
+    pointer-events: none;
+}
+
+.empty-state p {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-2);
+}
+
+.empty-state small {
+    font-size: 12px;
+}
+
+/* ══ DETAIL PANEL ══════════════════════════════════════ */
+.detail-panel {
+    height: 260px;
+    background: var(--bg-1);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    animation: slideUp 0.18s ease;
+}
+
+@keyframes slideUp {
+    from {
+        height: 0;
+        opacity: 0;
+    }
+
+    to {
+        height: 260px;
+        opacity: 1;
+    }
+}
+
+.detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-2);
+    /* Accent top border */
+    border-top: 2px solid var(--accent);
+}
+
+.detail-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.detail-body {
+    flex: 1;
+    overflow: auto;
+    padding: 12px 16px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    line-height: 1.75;
+}
+
+.detail-body::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.detail-body::-webkit-scrollbar-thumb {
+    background: var(--bg-4);
+    border-radius: 4px;
+}
+
+/* ── JSON Tree ── */
+.json-key {
+    color: var(--accent);
+}
+
+.json-str {
+    color: var(--green);
+}
+
+.json-num {
+    color: var(--yellow);
+}
+
+.json-bool {
+    color: var(--violet);
+}
+
+.json-null {
+    color: var(--text-3);
+}
+
+.tree-node {
+    cursor: pointer;
+}
+
+.tree-node:hover .json-key {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.tree-toggle {
+    display: inline-block;
+    width: 16px;
+    text-align: center;
+    color: var(--text-3);
+    font-size: 9px;
+    user-select: none;
+}
+
+.tree-children {
+    padding-left: 20px;
+}
+
+.tree-children.collapsed {
+    display: none;
+}
+
+/* ── Scrollbars (global) ── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bg-4);
+    border-radius: 4px;
+}
+
+/* ── Misc animations ── */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
