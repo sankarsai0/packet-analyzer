@@ -95,12 +95,6 @@ packet-analyzer/
 
 ---
 
-## 📸 Screenshots
-
-> _Start a capture or upload a pcap — packets stream in real-time with protocol-color-coded rows._
-
----
-
 ## 📄 License
 
 MIT © 2026
